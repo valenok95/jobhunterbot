@@ -2,9 +2,8 @@ package ru.wallentos.jobhunterbot.service;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,18 +13,19 @@ import ru.wallentos.jobhunterbot.config.BotConfig;
 
 @Service
 @Data
+@Slf4j
 @RequiredArgsConstructor
 public class TelegramBotService extends TelegramLongPollingBot {
-  @Autowired BotConfig config;
+  @Autowired private BotConfig config;
 
   @Override
   public String getBotUsername() {
-    return null; // config.getBotProps().getName();
+    return config.getName();
   }
 
   @Override
   public String getBotToken() {
-    return null; // config.getBotProps().getName();
+    return config.getKey();
   }
 
   @Override
@@ -33,6 +33,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
     if (update.hasMessage() && update.getMessage().hasText()) {
       String receivedText = update.getMessage().getText();
       long chatId = update.getMessage().getChatId();
+      log.info("message received: " + receivedText);
 
       switch (receivedText) {
         case "/start":
@@ -46,7 +47,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
           try {
             sendMessage(chatId, "Sorry, command not recognized=(");
           } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            log.error("Error occurred: " + e.getMessage());
           }
       }
     }
