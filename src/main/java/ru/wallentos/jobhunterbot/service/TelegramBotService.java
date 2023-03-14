@@ -20,11 +20,14 @@ public class TelegramBotService extends TelegramLongPollingBot {
 
   @Override
   public String getBotUsername() {
+
+    log.info("setting botName: " + config.getName());
     return config.getName();
   }
 
   @Override
   public String getBotToken() {
+    log.info("setting botKey: " + config.getKey());
     return config.getKey();
   }
 

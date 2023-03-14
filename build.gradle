@@ -24,3 +24,10 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+jarjar {
+    manifest {
+        attributes 'Main-Class': 'ru.wallentos.jobhunterbot.JobhunterbotApplication'
+    }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    from(configurations.runtimeClasspath.files.collect { zipTree(it) })
+}
