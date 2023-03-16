@@ -1,6 +1,6 @@
 <configuration>
 
-    <property name="HOME_LOG" value="/home/valentin/IdeaProjects/jobhunterbot/app.log"/>
+    <property name="HOME_LOG" value="./app.log"/>
 
     <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${HOME_LOG}</file>

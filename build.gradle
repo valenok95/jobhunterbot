@@ -6,7 +6,10 @@ plugins {
 
 group = 'ru.wallentos'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
@@ -24,11 +27,20 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task copyAllDependencies(type: Copy) {
+    from(configurations.runtimeClasspath.files)
+    into("$buildDir/libs/lib")
+}
+
+
 jar {
+    def jars = configurations.runtimeClasspath.files.collect { "lib/$it.name" }
     manifest {
         attributes 'Main-Class': 'ru.wallentos.jobhunterbot.JobhunterbotApplication'
+        attributes 'Class-Path': jars.join(' ')
     }
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-    from(configurations.runtimeClasspath.files.collect { zipTree(it) })
-    
+    //duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    //from(configurations.runtimeClasspath.files.collect { zipTree(it) })
 }
+jar.dependsOn copyAllDependencies
